@@ -95,3 +95,66 @@ CCPEAlldat = merge(CCPEAlldat, condomScaleAll, by = "PARTID", all = TRUE)
 CCPEAlldat = merge(CCPEAlldat, pocketScreenerAll, by = "PARTID", all = TRUE)  
 head(CCPEAlldat)
 write.csv(CCPEAlldat, "CCPEAlldat.csv", row.names = FALSE)
+
+#Connections #####  ##### ##### ##### ##### ##### ##### ##### ##### ##### ##### ##### #####
+# Need the following data sets: Benefits Tracking, CSQ8 6 month, GAD7, GPRA, HCVRQ, HSUQ, PHQ9, SASSI3
+## Benefits Tracking first
+beneiftsTrackBase = read.spss("C:/Users/Matthew.Hanauer/Desktop/Matt'sDataConnections/Benefits Tracking/Benefits Tracking Baseline.sav", to.data.frame = TRUE)
+beneiftsTrack3month = read.spss("C:/Users/Matthew.Hanauer/Desktop/Matt'sDataConnections/Benefits Tracking/Benefits Tracking Baseline.sav", to.data.frame = TRUE)
+beneiftsTrack6month = read.spss("C:/Users/Matthew.Hanauer/Desktop/Matt'sDataConnections/Benefits Tracking/Benefits Tracking 6-month.sav", to.data.frame = TRUE)
+
+
+benefitsAll = merge(beneiftsTrackBase, beneiftsTrack3month, by = "ParticipantID", all = TRUE)
+benefitsAll = merge(benefitsAll, beneiftsTrack6month, by = "ParticipantID", all = TRUE)
+
+### CSQ8 #####  ##### ##### ##### ##### ##### ##### ##### ##### ##### ##### ##### #####
+CSQ86month = read.spss("C:/Users/Matthew.Hanauer/Desktop/Matt'sDataConnections/CSQ8/CSQ8 6 Month.sav", to.data.frame = TRUE)
+
+### GAD7 #####  ##### ##### ##### ##### ##### ##### ##### ##### ##### ##### ##### #####
+# Remember that this data is 6 and 12 month assessments not 3 and 6 month
+setwd("C:/Users/Matthew.Hanauer/Desktop/Matt'sDataConnections/GAD7")
+GAD7Base = read.spss("C:/Users/Matthew.Hanauer/Desktop/Matt'sDataConnections/GAD7/GAD7 Baseline.sav", to.data.frame = TRUE)
+GAD76month = read.spss("C:/Users/Matthew.Hanauer/Desktop/Matt'sDataConnections/GAD7/GAD7 6 Month.sav", to.data.frame = TRUE)
+GAD712month = read.spss("C:/Users/Matthew.Hanauer/Desktop/Matt'sDataConnections/GAD7/GAD7 12 Month.sav", to.data.frame = TRUE)
+
+GAD7All = merge(GAD7Base, GAD76month, by = "ParticipantID", all = TRUE)
+GAD7All = merge(GAD7All, GAD712month, by = "ParticipantID", all = TRUE)
+
+### GPRA #####  ##### ##### ##### ##### ##### ##### ##### ##### ##### ##### ##### #####
+setwd("C:/Users/Matthew.Hanauer/Desktop/Matt'sDataConnections/GPRA")
+GPRABase = read.spss("C:/Users/Matthew.Hanauer/Desktop/Matt'sDataConnections/Benefits Tracking/Benefits Tracking Baseline.sav", to.data.frame = TRUE)
+GPRA6month = read.spss("C:/Users/Matthew.Hanauer/Desktop/Matt'sDataConnections/Benefits Tracking/Benefits Tracking 6-month.sav", to.data.frame = TRUE)
+GPRAAll = merge(GPRABase, GPRA6month, by = "ParticipantID", all = TRUE)
+
+### HCVRQ #####  ##### ##### ##### ##### ##### ##### ##### ##### ##### ##### ##### #####
+setwd("C:/Users/Matthew.Hanauer/Desktop/Matt'sDataConnections/HCVRQ")
+
+HCVRQBase = read.spss("C:/Users/Matthew.Hanauer/Desktop/Matt'sDataConnections/HCVRQ/HCVRQ Baseline.sav", to.data.frame = TRUE)
+HCVRQ6month = read.spss("C:/Users/Matthew.Hanauer/Desktop/Matt'sDataConnections/HCVRQ/HCVRQ 6 Month.sav", to.data.frame = TRUE)
+HCVRQAll = merge(HCVRQBase, HCVRQ6month, by = "ParticipantID", all = TRUE)
+
+### HSUQ #####  ##### ##### ##### ##### ##### ##### ##### ##### ##### ##### ##### #####
+setwd("C:/Users/Matthew.Hanauer/Desktop/Matt'sDataConnections/HSUQ")
+HSUQBase = read.spss("C:/Users/Matthew.Hanauer/Desktop/Matt'sDataConnections/HSUQ/HSUQ Baseline.sav", to.data.frame = TRUE)
+HSUQ6month = read.spss("C:/Users/Matthew.Hanauer/Desktop/Matt'sDataConnections/HSUQ/HSUQ 6 Month.sav", to.data.frame = TRUE)
+HSUQAll = merge(HSUQBase, HSUQ6month, by = "ParticipantID", all = TRUE)
+
+### PHQ9 #####  ##### ##### ##### ##### ##### ##### ##### ##### ##### ##### ##### #####
+setwd("C:/Users/Matthew.Hanauer/Desktop/Matt'sDataConnections/PHQ9  ")
+PHQ9Base = read.spss("C:/Users/Matthew.Hanauer/Desktop/Matt'sDataConnections/PHQ9/PHQ9 Baseline.sav", to.data.frame = TRUE)
+PHQ96month = read.spss("C:/Users/Matthew.Hanauer/Desktop/Matt'sDataConnections/PHQ9/PHQ9 6 Month.sav", to.data.frame = TRUE)
+PHQ912month = read.spss("C:/Users/Matthew.Hanauer/Desktop/Matt'sDataConnections/PHQ9/PHQ9 12 Month.sav", to.data.frame = TRUE)
+PHQ9All = merge(PHQ9Base, PHQ96month, by = "ParticipantID", all = TRUE)
+PHQ9All = merge(PHQ9All, PHQ912month, by = "ParticipantID", all = TRUE)
+
+### SASSI3 #####  ##### ##### ##### ##### ##### ##### ##### ##### ##### ##### ##### #####
+setwd("C:/Users/Matthew.Hanauer/Desktop/Matt'sDataConnections/SASSI3")
+SASSI3Base = read.spss("C:/Users/Matthew.Hanauer/Desktop/Matt'sDataConnections/SASSI3/SASSI3 Baseline.sav", to.data.frame = TRUE)
+SASSI36month = read.spss("C:/Users/Matthew.Hanauer/Desktop/Matt'sDataConnections/SASSI3/SASSI3 6 Months.sav", to.data.frame = TRUE)
+SASSI3All = merge(SASSI3Base, SASSI36month, by = "ParticipantID", all = TRUE)
+
+
+
+
+
+
