@@ -1,9 +1,6 @@
 library(foreign)
 library(plyr)
 setwd("C:/Users/Matthew.Hanauer/Desktop/Matt'sData")
-install.packages("rprojroot")
-install.packages("devtools")
-devtools::install_github("rstudio/rmarkdown")
 # Get R markdown working later
 # Get audit in first and combine the rest after.  Can be fine, because you will do a full join.
 auditBase = read.spss("C:/Users/Matthew.Hanauer/Desktop/Matt'sData/AUDIT - Baseline.sav", to.data.frame = TRUE)
@@ -20,25 +17,30 @@ auditAll = merge(auditAll, audit6Month, by = "PARTID", all = TRUE)
 head(auditAll)
 
 # Now GPRA Adult.  Need to rename the PARTID to ID.  Make sure you aggregate baseline with 3 month then with 6 month
-gpraAdultBase = read.spss("C:/Users/Matthew.Hanauer/Desktop/Matt'sData/CCPE GRPA - Baseline_3.sav", to.data.frame = TRUE)
+# setwd("C:/Users/Matthew.Hanauer/Desktop/Matt'sData")
+gpraAdultBase = read.csv("CCPE GRPA - Baseline_3.csv", header = TRUE)
+gpraAdult3month = read.csv("Reassess 3M CCPE GPRA Adult.csv", header = TRUE)
 
-gpraAdult3month = read.spss("C:/Users/Matthew.Hanauer/Desktop/Matt'sData/Reassess 3M CCPE GPRA Adult.sav", to.data.frame = TRUE)
 
+gpraAdult6month = read.csv("Reassess 6M CCPE GPRA Adult.csv", header = TRUE)
 
-gpraAdult6month = read.spss("C:/Users/Matthew.Hanauer/Desktop/Matt'sData/Reassess 6M CCPE GPRA Adult.sav", to.data.frame = TRUE)
 
 gpraAdultAll = merge(gpraAdultBase, gpraAdult3month, by = "PARTID", all = TRUE)
 gpraAdultAll = merge(gpraAdultAll, gpraAdult6month, by = "PARTID", all = TRUE)
-
-
-
+write.csv(gpraAdultAll, "gpraAdultAll.csv", row.names = FALSE)
+# This is a test to prove that it is merging correctly.  1002 has both baseline and six month and their HIV answers are the same.
+test = data.frame(subset(gpraAdultAll, PARTID == 1002))
+write.csv(test, "test.csv", row.names = FALSE)
 # Now GPRA Youth ########## ########## ########## ########## ########## ########## ##########
 gpraYouthBase = read.spss("C:/Users/Matthew.Hanauer/Desktop/Matt'sData/Baseline CCPE GPRA Youth.sav", to.data.frame = TRUE)
 gpraYouth3month = read.spss("C:/Users/Matthew.Hanauer/Desktop/Matt'sData/Reassess 3M CCPE GPRA Youth.sav", to.data.frame = TRUE)
-grpaYouth6month = read.spss("C:/Users/Matthew.Hanauer/Desktop/Matt'sData/Reassess 6M CCPE GPRA Youth.sav", to.data.frame = TRUE)
-grpaYouthAll = merge(gpraYouthBase, gpraYouth3month, by = "PARTID", all = TRUE)
-grpaYouthAll = merge(grpaYouthAll, gpraYouth3month, by = "PARTID", all = TRUE)
-head(grpaYouthAll)
+gpraYouth6month = read.spss("C:/Users/Matthew.Hanauer/Desktop/Matt'sData/Reassess 6M CCPE GPRA Youth.sav", to.data.frame = TRUE)
+gpraYouthAll = merge(gpraYouthBase, gpraYouth3month, by = "PARTID", all = TRUE)
+gpraYouthAll = merge(gpraYouthAll, gpraYouth3month, by = "PARTID", all = TRUE)
+gpraYouthAll = data.frame(gpraYouthAll)
+head(gpraYouthAll)
+
+
 
 # Now DAST  ########## ########## ########## ########## ########## ########## ##########
 dastBase = read.spss("C:/Users/Matthew.Hanauer/Desktop/Matt'sData/DAST - Baseline.sav", to.data.frame = TRUE)
@@ -86,9 +88,9 @@ pocketScreenerAll = merge(pocketScreenerBase, pocketScreener3month, by = "PARTID
 pocketScreenerAll = merge(pocketScreenerAll, pocketScreener3month, by = "PARTID", all = TRUE)
 head(pocketScreenerAll)
 
-### Now start combining all of the data Merge the following data sets: auditAll, gpraAdultAll, grpaYouthAll, dastAll, hepCBase, condomScaleAll, pocketScreenerAll 
+### Now start combining all of the data Merge the following data sets: auditAll, gpraAdultAll, gpraYouthAll, dastAll, hepCBase, condomScaleAll, pocketScreenerAll 
 CCPEAlldat = merge(auditAll, gpraAdultAll, by = "PARTID", all = TRUE)  
-CCPEAlldat = merge(CCPEAlldat, grpaYouthAll, by = "PARTID", all = TRUE)  
+CCPEAlldat = merge(CCPEAlldat, gpraYouthAll, by = "PARTID", all = TRUE)  
 CCPEAlldat = merge(CCPEAlldat, dastAll, by = "PARTID", all = TRUE)  
 CCPEAlldat = merge(CCPEAlldat, hepCBase, by = "PARTID", all = TRUE)  
 CCPEAlldat = merge(CCPEAlldat, condomScaleAll, by = "PARTID", all = TRUE)
@@ -152,9 +154,6 @@ setwd("C:/Users/Matthew.Hanauer/Desktop/Matt'sDataConnections/SASSI3")
 SASSI3Base = read.spss("C:/Users/Matthew.Hanauer/Desktop/Matt'sDataConnections/SASSI3/SASSI3 Baseline.sav", to.data.frame = TRUE)
 SASSI36month = read.spss("C:/Users/Matthew.Hanauer/Desktop/Matt'sDataConnections/SASSI3/SASSI3 6 Months.sav", to.data.frame = TRUE)
 SASSI3All = merge(SASSI3Base, SASSI36month, by = "ParticipantID", all = TRUE)
-
-
-
 
 
 
