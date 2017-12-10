@@ -1,8 +1,7 @@
-#### This data file loads data for both connections and CCPE. ######
 library(foreign)
-library(plyr)
 setwd("C:/Users/Matthew.Hanauer/Desktop/Matt'sData")
-# Here is the audit and I am breaking it down by baseline, 3m audit, and 6m audit.  Then I making sure the ID value is the same for each data set therefore I am using the rename function to change all of the ID names to PARTID.
+# Get R markdown working later
+# Get audit in first and combine the rest after.  Can be fine, because you will do a full join.
 auditBase = read.spss("C:/Users/Matthew.Hanauer/Desktop/Matt'sData/AUDIT - Baseline.sav", to.data.frame = TRUE)
 auditBase = rename(auditBase, c("ID" = "PARTID"))
 
@@ -12,13 +11,11 @@ audit3Month = rename(audit6Month, c("ID" = "PARTID"))
 audit6Month = read.spss("C:/Users/Matthew.Hanauer/Desktop/Matt'sData/Reassess 6M AUDIT.sav", to.data.frame = TRUE)
 audit6Month = rename(audit6Month, c("ID" = "PARTID"))
 
-# I am first merging auditbase and audit3month, because I cannot figure out how to figure three at the same time.
-# Then I am merging by all which is a full outer join meaning that IDs from all data set are included in the final data set.
 auditAll = merge(auditBase, audit3Month, by = "PARTID", all = TRUE)
 auditAll = merge(auditAll, audit6Month, by = "PARTID", all = TRUE)
 head(auditAll)
 
-## Same process as the audit for the GPRA
+# Now GPRA Adult.  Need to rename the PARTID to ID.  Make sure you aggregate baseline with 3 month then with 6 month
 setwd("C:/Users/Matthew.Hanauer/Desktop/Matt'sData")
 gpraAdultBase = read.csv("CCPE GRPA - Baseline_3.csv", header = TRUE)
 gpraAdult3month = read.csv("Reassess 3M CCPE GPRA Adult.csv", header = TRUE)
@@ -29,11 +26,10 @@ write.csv(gpraAdultAll, "gpraAdultAll.csv", row.names = FALSE)
 # This is a test to prove that it is merging correctly.  1002 has both baseline and six month and their HIV answers are the same.
 test = data.frame(subset(gpraAdultAll, PARTID == 1002))
 write.csv(test, "test.csv", row.names = FALSE)
-
 # Now GPRA Youth ########## ########## ########## ########## ########## ########## ##########
-gpraYouthBase = read.csv("Baseline CCPE GPRA Youth.csv", header = TRUE)
-gpraYouth3month = read.csv("3M CCPE GPRA Youth.csv", header = TRUE)
-gpraYouth6month = read.csv("6M CCPE GPRA Youth.csv", header = TRUE)
+gpraYouthBase = read.spss("C:/Users/Matthew.Hanauer/Desktop/Matt'sData/Baseline CCPE GPRA Youth.sav", to.data.frame = TRUE)
+gpraYouth3month = read.spss("C:/Users/Matthew.Hanauer/Desktop/Matt'sData/Reassess 3M CCPE GPRA Youth.sav", to.data.frame = TRUE)
+gpraYouth6month = read.spss("C:/Users/Matthew.Hanauer/Desktop/Matt'sData/Reassess 6M CCPE GPRA Youth.sav", to.data.frame = TRUE)
 gpraYouthAll = merge(gpraYouthBase, gpraYouth3month, by = "PARTID", all = TRUE)
 gpraYouthAll = merge(gpraYouthAll, gpraYouth3month, by = "PARTID", all = TRUE)
 gpraYouthAll = data.frame(gpraYouthAll)
@@ -75,7 +71,6 @@ head(condomScaleAll)
 
 # Now Pocket Screener ########## ########## ########## ########## ########## ########## ##########
 pocketScreenerBase = read.spss("C:/Users/Matthew.Hanauer/Desktop/Matt'sData/SAMHSA Pocket Screen - Baseline.sav", to.data.frame = TRUE)
-install.packages("plyr")
 pocketScreenerBase = rename(pocketScreenerBase, c("ID" = "PARTID"))
 
 pocketScreener3month = read.spss("C:/Users/Matthew.Hanauer/Desktop/Matt'sData/Reassess 3M SAMHSA Pocket Screen.sav", to.data.frame = TRUE)
@@ -101,11 +96,12 @@ write.csv(CCPEAlldat, "CCPEAlldat.csv", row.names = FALSE)
 #Connections #####  ##### ##### ##### ##### ##### ##### ##### ##### ##### ##### ##### #####
 # Need the following data sets: Benefits Tracking, CSQ8 6 month, GAD7, GPRA, HCVRQ, HSUQ, PHQ9, SASSI3
 ## Benefits Tracking first
-beneiftsTrackBase = read.spss("C:/Users/Matthew.Hanauer/Desktop/Matt'sDataConnections/Benefits Tracking/Benefits Tracking Baseline.sav" , use.value.labels = FALSE, to.data.frame = TRUE)
-beneiftsTrack6month = read.spss("C:/Users/Matthew.Hanauer/Desktop/Matt'sDataConnections/Benefits Tracking/Benefits Tracking 6-month.sav", use.value.labels = FALSE, to.data.frame = TRUE)
+beneiftsTrackBase = read.spss("C:/Users/Matthew.Hanauer/Desktop/Matt'sDataConnections/Benefits Tracking/Benefits Tracking Baseline.sav", to.data.frame = TRUE)
+beneiftsTrack3month = read.spss("C:/Users/Matthew.Hanauer/Desktop/Matt'sDataConnections/Benefits Tracking/Benefits Tracking Baseline.sav", to.data.frame = TRUE)
+beneiftsTrack6month = read.spss("C:/Users/Matthew.Hanauer/Desktop/Matt'sDataConnections/Benefits Tracking/Benefits Tracking 6-month.sav", to.data.frame = TRUE)
 
 
-benefitsAll = merge(beneiftsTrackBase, beneiftsTrack6month, by = "ParticipantID", all = TRUE)
+benefitsAll = merge(beneiftsTrackBase, beneiftsTrack3month, by = "ParticipantID", all = TRUE)
 benefitsAll = merge(benefitsAll, beneiftsTrack6month, by = "ParticipantID", all = TRUE)
 
 ### CSQ8 #####  ##### ##### ##### ##### ##### ##### ##### ##### ##### ##### ##### #####
@@ -121,11 +117,6 @@ GAD712month = read.spss("C:/Users/Matthew.Hanauer/Desktop/Matt'sDataConnections/
 GAD7All = merge(GAD7Base, GAD76month, by = "ParticipantID", all = TRUE)
 GAD7All = merge(GAD7All, GAD712month, by = "ParticipantID", all = TRUE)
 
-### GPRA #####  ##### ##### ##### ##### ##### ##### ##### ##### ##### ##### ##### #####
-setwd("C:/Users/Matthew.Hanauer/Desktop/Matt'sDataConnections/GPRA")
-GPRABase = read.spss("C:/Users/Matthew.Hanauer/Desktop/Matt'sDataConnections/GPRA/GPRA Baseline.sav", use.value.labels = FALSE, to.data.frame = TRUE)
-GPRA6month = read.spss("C:/Users/Matthew.Hanauer/Desktop/Matt'sDataConnections/GPRA/GPRA 6 Months.sav", use.value.labels = FALSE, to.data.frame = TRUE)
-GPRAAll = merge(GPRABase, GPRA6month, by = "ParticipantID", all = TRUE)
 
 ### HCVRQ #####  ##### ##### ##### ##### ##### ##### ##### ##### ##### ##### ##### #####
 setwd("C:/Users/Matthew.Hanauer/Desktop/Matt'sDataConnections/HCVRQ")
@@ -141,7 +132,7 @@ HSUQ6month = read.spss("C:/Users/Matthew.Hanauer/Desktop/Matt'sDataConnections/H
 HSUQAll = merge(HSUQBase, HSUQ6month, by = "ParticipantID", all = TRUE)
 
 ### PHQ9 #####  ##### ##### ##### ##### ##### ##### ##### ##### ##### ##### ##### #####
-setwd("C:/Users/Matthew.Hanauer/Desktop/Matt'sDataConnections/PHQ9")
+setwd("C:/Users/Matthew.Hanauer/Desktop/Matt'sDataConnections/PHQ9  ")
 PHQ9Base = read.spss("C:/Users/Matthew.Hanauer/Desktop/Matt'sDataConnections/PHQ9/PHQ9 Baseline.sav", to.data.frame = TRUE)
 PHQ96month = read.spss("C:/Users/Matthew.Hanauer/Desktop/Matt'sDataConnections/PHQ9/PHQ9 6 Month.sav", to.data.frame = TRUE)
 PHQ912month = read.spss("C:/Users/Matthew.Hanauer/Desktop/Matt'sDataConnections/PHQ9/PHQ9 12 Month.sav", to.data.frame = TRUE)
@@ -150,16 +141,12 @@ PHQ9All = merge(PHQ9All, PHQ912month, by = "ParticipantID", all = TRUE)
 
 ### SASSI3 #####  ##### ##### ##### ##### ##### ##### ##### ##### ##### ##### ##### #####
 setwd("C:/Users/Matthew.Hanauer/Desktop/Matt'sDataConnections/SASSI3")
-SASSI3Base = read.spss("C:/Users/Matthew.Hanauer/Desktop/Matt'sDataConnections/SASSI3/SASSI3 Baseline.sav",use.value.labels = FALSE, to.data.frame = TRUE)
-head(SASSI3Base)
-SASSI36month = read.spss("C:/Users/Matthew.Hanauer/Desktop/Matt'sDataConnections/SASSI3/SASSI3 6 Months.sav", use.value.labels = FALSE, to.data.frame = TRUE)
+SASSI3Base = read.spss("C:/Users/Matthew.Hanauer/Desktop/Matt'sDataConnections/SASSI3/SASSI3 Baseline.sav", to.data.frame = TRUE)
+SASSI36month = read.spss("C:/Users/Matthew.Hanauer/Desktop/Matt'sDataConnections/SASSI3/SASSI3 6 Months.sav", to.data.frame = TRUE)
 SASSI3All = merge(SASSI3Base, SASSI36month, by = "ParticipantID", all = TRUE)
 
-
-### GPRACon #####  ##### ##### ##### ##### ##### ##### ##### ##### ##### ##### ##### #####
-setwd("C:/Users/Matthew.Hanauer/Desktop/Matt'sDataConnections/GPRA")
-GPRAConBase = read.spss("C:/Users/Matthew.Hanauer/Desktop/Matt'sDataConnections/GPRA/GPRA Baseline.sav", use.value.labels = FALSE, to.data.frame = TRUE)
-GPRAConMonth6 = read.spss("C:/Users/Matthew.Hanauer/Desktop/Matt'sDataConnections/GPRA/GPRA 6 Months.sav", use.value.labels = FALSE, to.data.frame = TRUE)
-GPRAConAll = merge(GPRAConBase, GPRAConMonth6, by = "ParticipantID", all = TRUE)
-head(GPRAConAll)
+setwd("C:/Users/Matthew.Hanauer/Desktop/Matt'sDataConnections/GPRA") 
+GPRAConBase =read.spss("C:/Users/Matthew.Hanauer/Desktop/Matt'sDataConnections/GPRA/GPRA Baseline.sav", use.value.labels = FALSE, to.data.frame = TRUE) 
+GPRAConMonth6 =read.spss("C:/Users/Matthew.Hanauer/Desktop/Matt'sDataConnections/GPRA/GPRA 6 Months.sav", use.value.labels = FALSE, to.data.frame = TRUE) 
+GPRAAll = merge(GPRAConBase, GPRAConMonth6, by = "ParticipantID", all = TRUE)
 
