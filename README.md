@@ -1,97 +1,161 @@
-library(foreign)
-library(plyr)
-setwd("C:/Users/Matthew.Hanauer/Desktop/Matt'sData")
-install.packages("rprojroot")
-install.packages("devtools")
-devtools::install_github("rstudio/rmarkdown")
-# Get R markdown working later
-# Get audit in first and combine the rest after.  Can be fine, because you will do a full join.
-auditBase = read.spss("C:/Users/Matthew.Hanauer/Desktop/Matt'sData/AUDIT - Baseline.sav", to.data.frame = TRUE)
-auditBase = rename(auditBase, c("ID" = "PARTID"))
+##### Goal 1 Objective D ##### ##### ##### ##### ##### ##### ##### ##### ##### #####  ##### ##### ##### ##### ##### 
+## Grab total number of people with a part ID.  Then subset to only people in 2017 for QPRY2Q4.  Need to get the year and month
+setwd("C:/Users/Matthew.Hanauer/Desktop/")
+head(GPRAAll)
+Goal1ObjectiveConn = data.frame(GPRAAll$ParticipantID)
+Goal1ObjectiveConn = 
+Goal1ObjectiveConn  = dim(Goal1ObjectiveConn)
+Goal1ObjectiveConn = data.frame(Goal1ObjectiveConn[1])
+colnames("Goal1ObjectiveConn") = c("Total Enrolled")
+write.csv(Goal1ObjectiveConn, "Goal1ObjectiveConn.csv", row.names = FALSE)
+### Goal 3 Objective A ####### ####################################################################################
+# Need to find the substance abuse variables and look at reductions AnyAlcohol
+# If reusing CCPE get rid of BaseMonth6, BaseMonth6, change goal and objective to the correct one
+library("plyr")
+Goal3ObjectiveA = data.frame(GPRAAll$AnyAlcohol.x, GPRAAll$AnyAlcohol.y)
+head(Goal3ObjectiveAConn)
+summary(Goal3ObjectiveAConn) 
+Goal3ObjectiveA  = data.frame(apply(Goal3ObjectiveA, 2, function(x){ifelse(x == -99, NA, x)}))
+Goal3ObjectiveA  = na.omit(Goal3ObjectiveA)
+dim(Goal3ObjectiveA)
+# I think I alter this data to have 1's and zero's 
+Goal3ObjectiveA  = data.frame(apply(Goal3ObjectiveA, 2, function(x){ifelse(x > 0, 1, 0)}))
+head(Goal3ObjectiveA)
+summary(Goal3ObjectiveA)
+# Want to see baseline go down so see X go down relative to y so x less y
+wilcox.test(Goal3ObjectiveA$GPRAAll.AnyAlcohol.y,Goal3ObjectiveA$GPRAAll.AnyAlcohol.x, paired = TRUE, alternative  =c("less"))
 
-audit3Month = read.spss("C:/Users/Matthew.Hanauer/Desktop/Matt'sData/Reassess 3M AUDIT.sav", to.data.frame = TRUE)
-audit3Month = rename(audit6Month, c("ID" = "PARTID"))
-
-audit6Month = read.spss("C:/Users/Matthew.Hanauer/Desktop/Matt'sData/Reassess 6M AUDIT.sav", to.data.frame = TRUE)
-audit6Month = rename(audit6Month, c("ID" = "PARTID"))
-
-auditAll = merge(auditBase, audit3Month, by = "PARTID", all = TRUE)
-auditAll = merge(auditAll, audit6Month, by = "PARTID", all = TRUE)
-head(auditAll)
-
-# Now GPRA Adult.  Need to rename the PARTID to ID.  Make sure you aggregate baseline with 3 month then with 6 month
-gpraAdultBase = read.spss("C:/Users/Matthew.Hanauer/Desktop/Matt'sData/CCPE GRPA - Baseline_3.sav", to.data.frame = TRUE)
-
-gpraAdult3month = read.spss("C:/Users/Matthew.Hanauer/Desktop/Matt'sData/Reassess 3M CCPE GPRA Adult.sav", to.data.frame = TRUE)
+Goal3ObjectiveA = t(data.frame(colMeans(Goal3ObjectiveA)))
+colnames(Goal3ObjectiveA) = c("Base", "Month6")
+Goal3ObjectiveA = data.frame(Goal3ObjectiveA)
+Goal3ObjectiveA$Difference = (Goal3ObjectiveA$Month6-Goal3ObjectiveA$Base)/Goal3ObjectiveA$Base
+Goal3ObjectiveA = round(Goal3ObjectiveA,2)
+write.csv(Goal3ObjectiveA, "Goal3ObjectiveA.csv", row.names = FALSE) 
 
 
-gpraAdult6month = read.spss("C:/Users/Matthew.Hanauer/Desktop/Matt'sData/Reassess 6M CCPE GPRA Adult.sav", to.data.frame = TRUE)
+####### Goal 3 Objective B ####### #############################################################################
+# Grab PHQ-9 and GAD-7 scores for this indicator.
+head(PHQ9All)
+head(PHQ9All$PHQ9Total)
+# Get BaseMonth6 and then repeat for BaseMonth12
+PHQ9BaseMonth6 = data.frame(PHQ9All$PHQ9Total.x, PHQ9All$PHQ9Total.y)
+summary(PHQ9BaseMonth6)
+dim(PHQ9BaseMonth6)
+PHQ9BaseMonth6 = data.frame(na.omit(PHQ9BaseMonth6))
+colnames(PHQ9BaseMonth6) =c("Base", "Month6")
+dim(PHQ9BaseMonth6)
+head(PHQ9BaseMonth6)
+wilcox.test(PHQ9BaseMonth6$Month6, PHQ9BaseMonth6$Base, paired = TRUE, alternative = c("less"))
+PHQ9BaseMonth6 = colMeans(PHQ9BaseMonth6)
+PHQ9BaseMonth6 = data.frame(t(PHQ9BaseMonth6))
+PHQ9BaseMonth6$Difference = (PHQ9BaseMonth6$Month6-PHQ9BaseMonth6$Base)/ PHQ9BaseMonth6$Base
+PHQ9BaseMonth6 = round(PHQ9BaseMonth6,2)
+write.csv(PHQ9BaseMonth6, "PHQ9BaseMonth6.csv", row.names = FALSE)
 
-gpraAdultAll = merge(gpraAdultBase, gpraAdult3month, by = "PARTID", all = TRUE)
-gpraAdultAll = merge(gpraAdultAll, gpraAdult6month, by = "PARTID", all = TRUE)
+## Just replace PHQ9 with GAD7
+head(GAD7All)
+GAD7BaseMonth6 = data.frame(GAD7All$GAD7Total.x, GAD7All$GAD7Total.y)
+summary(GAD7BaseMonth6)
+dim(GAD7BaseMonth6)
+GAD7BaseMonth6 = data.frame(na.omit(GAD7BaseMonth6))
+colnames(GAD7BaseMonth6) =c("Base", "Month6")
+dim(GAD7BaseMonth6)
+head(GAD7BaseMonth6)
+wilcox.test(GAD7BaseMonth6$Month6, GAD7BaseMonth6$Base, paired = TRUE, alternative = c("less"))
+GAD7BaseMonth6 = colMeans(GAD7BaseMonth6)
+GAD7BaseMonth6 = data.frame(t(GAD7BaseMonth6))
+GAD7BaseMonth6$Difference = (GAD7BaseMonth6$Month6-GAD7BaseMonth6$Base)/ GAD7BaseMonth6$Base
+GAD7BaseMonth6 = round(GAD7BaseMonth6,2)
+write.csv(GAD7BaseMonth6, "GAD7BaseMonth6.csv", row.names = FALSE)
 
+#### Goal 3 Objective C ######## ######## ################################################
+## First need to figure who is a yes for the inpaitent stuff and who is a no.  Include the parID.  Then 
+# Once I know who is a yes and no with part ID for all of the variables that I want to combine, then 
+# I get rid of the missing data.  Then once the missing data is gone I merge the times variables by ID.  Then I know
+# if there is a missing value for the times variable it is a no and not a missing and I can put a zero.
+# What variables to include.  Not using DrugRelated, because almost all of the data is coded as missing. 
+# So instead just using general variable TimesCrime as the crime indicator.
 
+Goal3ObjectiveCBaseMonth6 = data.frame(ParticipantID = GPRAAll$ParticipantID, GPRAAll$TimesCrime.x,GPRAAll$TimesCrime.y, GPRAAll$InAlcohol.x, GPRAAll$InAlcohol.y, GPRAAll$OutAlcohol.x, GPRAAll$OutAlcohol.y, GPRAAll$ERAlcohol.x, GPRAAll$ERAlcohol.y)
+summary(Goal3ObjectiveCBaseMonth6)
+Goal3ObjectiveCBaseMonth6 = na.omit(Goal3ObjectiveCBaseMonth6)
 
-# Now GPRA Youth ########## ########## ########## ########## ########## ########## ##########
-gpraYouthBase = read.spss("C:/Users/Matthew.Hanauer/Desktop/Matt'sData/Baseline CCPE GPRA Youth.sav", to.data.frame = TRUE)
-gpraYouth3month = read.spss("C:/Users/Matthew.Hanauer/Desktop/Matt'sData/Reassess 3M CCPE GPRA Youth.sav", to.data.frame = TRUE)
-grpaYouth6month = read.spss("C:/Users/Matthew.Hanauer/Desktop/Matt'sData/Reassess 6M CCPE GPRA Youth.sav", to.data.frame = TRUE)
-grpaYouthAll = merge(gpraYouthBase, gpraYouth3month, by = "PARTID", all = TRUE)
-grpaYouthAll = merge(grpaYouthAll, gpraYouth3month, by = "PARTID", all = TRUE)
-head(grpaYouthAll)
+Goal3ObjectiveCBaseMonth6Times = data.frame(ParticipantID = GPRAAll$ParticipantID, GPRAAll$InAlcoholTimes.x, GPRAAll$InAlcoholTimes.y, GPRAAll$OutAlcoholTimes.x, GPRAAll$OutAlcoholTimes.y, GPRAAll$ERAlcoholTimes.x, GPRAAll$ERAlcoholTimes.y)
+Goal3ObjectiveCBaseMonth6 = merge(Goal3ObjectiveCBaseMonth6 , Goal3ObjectiveCBaseMonth6Times , by = "ParticipantID", all.x = TRUE)
+head(Goal3ObjectiveCBaseMonth6)
+summary(Goal3ObjectiveCBaseMonth6)
+dim(Goal3ObjectiveCBaseMonth6)
+Goal3ObjectiveCBaseMonth6 = data.frame(Goal3ObjectiveCBaseMonth6[,10:15])
+# You can just sum across with na.rm = TRUE and the NA will be treated as zeros so you don't have to get rid of them.
+Goal3ObjectiveCBaseMonth6 = data.frame(apply(Goal3ObjectiveCBaseMonth6, 2, function(x){ifelse(x == -99.0, 0,x)}))
+summary(Goal3ObjectiveCBaseMonth6)
+write.csv(Goal3ObjectiveCBaseMonth6, "Goal3ObjectiveCBaseMonth6.csv", row.names = FALSE)
+Goal3ObjectiveCBaseMonth6  = read.csv("Goal3ObjectiveCBaseMonth6.csv", header = TRUE)
+summary(Goal3ObjectiveCBaseMonth6)
 
-# Now DAST  ########## ########## ########## ########## ########## ########## ##########
-dastBase = read.spss("C:/Users/Matthew.Hanauer/Desktop/Matt'sData/DAST - Baseline.sav", to.data.frame = TRUE)
-dastBase = rename(dastBase, c("ID" = "PARTID"))
+Goal3ObjectiveCBase = data.frame(Goal3ObjectiveCBaseMonth6$GPRAAll.InAlcoholTimes.x, Goal3ObjectiveCBaseMonth6$GPRAAll.OutAlcoholTimes.x, Goal3ObjectiveCBaseMonth6$GPRAAll.ERAlcoholTimes.x)
+Goal3ObjectiveCBase = data.frame(apply(Goal3ObjectiveCBase, 1, sum, na.rm = TRUE))
+colnames(Goal3ObjectiveCBase) = c("SABase")
 
-dast3month = read.spss("C:/Users/Matthew.Hanauer/Desktop/Matt'sData/Reassess 3M DAST.sav", to.data.frame = TRUE)
-dast3month = rename(dast3month, c("ID" = "PARTID"))
+Goal3ObjectiveCMonth6= data.frame(Goal3ObjectiveCBaseMonth6$GPRAAll.InAlcoholTimes.y, Goal3ObjectiveCBaseMonth6$GPRAAll.OutAlcoholTimes.y, Goal3ObjectiveCBaseMonth6$GPRAAll.ERAlcoholTimes.y)
+Goal3ObjectiveCMonth6= data.frame(apply(Goal3ObjectiveCMonth6, 1, sum, na.rm = TRUE))
+colnames(Goal3ObjectiveCMonth6) = c("SAMonth6")
 
-dast6month = read.spss("C:/Users/Matthew.Hanauer/Desktop/Matt'sData/Reassess 6M DAST.sav", to.data.frame = TRUE)
-dast6month = rename(dast6month, c("ID" = "PARTID"))
+Goal3ObjectiveCBaseMonth6 = data.frame(Goal3ObjectiveCMonth6, Goal3ObjectiveCBase)
+colnames(Goal3ObjectiveCBaseMonth6) = c("SAMonth6", "SABase")
+summary(Goal3ObjectiveCBaseMonth6)
+wilcox.test(Goal3ObjectiveCBaseMonth6$SAMonth6, Goal3ObjectiveCBaseMonth6$SABase, paired = TRUE, alternative = c("less"))
+## Can report the means, but they are statistically significantly different.
+Goal3ObjectiveCBaseMonth6 = data.frame(t(colMeans(Goal3ObjectiveCBaseMonth6)))
 
-dastAll = merge(dastBase, dast3month, by = "PARTID", all = TRUE)
-dastAll = merge(dastAll, dast3month, by = "PARTID", all = TRUE)
-head(dastAll)
+Goal3ObjectiveCBaseMonth6$Difference = (Goal3ObjectiveCBaseMonth6$SAMonth6-Goal3ObjectiveCBaseMonth6$SABase)/ Goal3ObjectiveCBaseMonth6$SABase
+Goal3ObjectiveCBaseMonth6 = round(Goal3ObjectiveCBaseMonth6, 2)
+write.csv(Goal3ObjectiveCBaseMonth6, "Goal3ObjectiveCBaseMonth6.csv", row.names = FALSE)
 
-# Now HepC ########## ########## ########## ########## ########## ########## ##########
-hepCBase = read.spss("C:/Users/Matthew.Hanauer/Desktop/Matt'sData/HepC Risk Questionnaire - Baseline.sav", to.data.frame = TRUE)
-hepCBase = rename(hepCBase, c("ID" = "PARTID"))
+#### Goal 3 Objective D ######## ######## ################################################
+Goal3ObjectiveDBaseMonth6 = data.frame(ParticipantID = GPRAAll$ParticipantID, GPRAAll$TimesCrime.x,GPRAAll$TimesCrime.y, GPRAAll$InMental.x, GPRAAll$InMental.y, GPRAAll$OutMental.x, GPRAAll$OutMental.y, GPRAAll$ERMental.x, GPRAAll$ERMental.y)
+summary(Goal3ObjectiveDBaseMonth6)
+Goal3ObjectiveDBaseMonth6 = na.omit(Goal3ObjectiveDBaseMonth6)
 
-# Now Condom Scale ########## ########## ########## ########## ########## ########## ##########
-condomScaleBase = read.spss("C:/Users/Matthew.Hanauer/Desktop/Matt'sData/Condom Scale - Baseline.sav", to.data.frame = TRUE)
-condomScaleBase = rename(condomScaleBase, c("ID." = "PARTID"))
+Goal3ObjectiveDBaseMonth6Times = data.frame(ParticipantID = GPRAAll$ParticipantID, GPRAAll$InMentalTimes.x, GPRAAll$InMentalTimes.y, GPRAAll$OutMentalTimes.x, GPRAAll$OutMentalTimes.y, GPRAAll$ERMentalTimes.x, GPRAAll$ERMentalTimes.y)
+Goal3ObjectiveDBaseMonth6 = merge(Goal3ObjectiveDBaseMonth6 , Goal3ObjectiveDBaseMonth6Times , by = "ParticipantID", all.x = TRUE)
+head(Goal3ObjectiveDBaseMonth6)
+summary(Goal3ObjectiveDBaseMonth6)
+dim(Goal3ObjectiveDBaseMonth6)
+Goal3ObjectiveDBaseMonth6 = data.frame(Goal3ObjectiveDBaseMonth6[,10:15])
+# You can just sum across with na.rm = TRUE and the NA will be treated as zeros so you don't have to get rid of them.
+Goal3ObjectiveDBaseMonth6 = data.frame(apply(Goal3ObjectiveDBaseMonth6, 2, function(x){ifelse(x == -99.0, 0,x)}))
+summary(Goal3ObjectiveDBaseMonth6)
+write.csv(Goal3ObjectiveDBaseMonth6, "Goal3ObjectiveDBaseMonth6.csv", row.names = FALSE)
+Goal3ObjectiveDBaseMonth6  = read.csv("Goal3ObjectiveDBaseMonth6.csv", header = TRUE)
+summary(Goal3ObjectiveDBaseMonth6)
 
-condomScale3month = read.spss("C:/Users/Matthew.Hanauer/Desktop/Matt'sData/Reassess 3M Condom Scale.sav", to.data.frame = TRUE)
-condomScale3month = rename(condomScale3month, c("ID." = "PARTID"))
+Goal3ObjectiveDBase = data.frame(Goal3ObjectiveDBaseMonth6$GPRAAll.InMentalTimes.x, Goal3ObjectiveDBaseMonth6$GPRAAll.OutMentalTimes.x, Goal3ObjectiveDBaseMonth6$GPRAAll.ERMentalTimes.x)
+Goal3ObjectiveDBase = data.frame(apply(Goal3ObjectiveDBase, 1, sum, na.rm = TRUE))
+colnames(Goal3ObjectiveDBase) = c("SABase")
 
-condomScale6month = read.spss("C:/Users/Matthew.Hanauer/Desktop/Matt'sData/Reassess 6M Condom Scale.sav", to.data.frame = TRUE)
-condomScale6month = rename(condomScale6month, c("ID." = "PARTID"))
+Goal3ObjectiveDMonth6= data.frame(Goal3ObjectiveDBaseMonth6$GPRAAll.InMentalTimes.y, Goal3ObjectiveDBaseMonth6$GPRAAll.OutMentalTimes.y, Goal3ObjectiveDBaseMonth6$GPRAAll.ERMentalTimes.y)
+Goal3ObjectiveDMonth6= data.frame(apply(Goal3ObjectiveDMonth6, 1, sum, na.rm = TRUE))
+colnames(Goal3ObjectiveDMonth6) = c("SAMonth6")
 
-condomScaleAll = merge(condomScaleBase, condomScale3month, by = "PARTID", all = TRUE)
-condomScaleAll = merge(condomScaleAll, condomScale3month, by = "PARTID", all = TRUE)
-head(condomScaleAll)
+Goal3ObjectiveDBaseMonth6 = data.frame(Goal3ObjectiveDMonth6, Goal3ObjectiveDBase)
+colnames(Goal3ObjectiveDBaseMonth6) = c("SAMonth6", "SABase")
+summary(Goal3ObjectiveDBaseMonth6)
+wilcox.test(Goal3ObjectiveDBaseMonth6$SAMonth6, Goal3ObjectiveDBaseMonth6$SABase, paired = TRUE, alternative = c("less"))
+## Can report the means, but they are statistically significantly different.
+Goal3ObjectiveDBaseMonth6 = data.frame(t(colMeans(Goal3ObjectiveDBaseMonth6)))
 
-# Now Pocket Screener ########## ########## ########## ########## ########## ########## ##########
-pocketScreenerBase = read.spss("C:/Users/Matthew.Hanauer/Desktop/Matt'sData/SAMHSA Pocket Screen - Baseline.sav", to.data.frame = TRUE)
-pocketScreenerBase = rename(pocketScreenerBase, c("ID" = "PARTID"))
+Goal3ObjectiveDBaseMonth6$Difference = (Goal3ObjectiveDBaseMonth6$SAMonth6-Goal3ObjectiveDBaseMonth6$SABase)/ Goal3ObjectiveDBaseMonth6$SABase
+Goal3ObjectiveDBaseMonth6 = round(Goal3ObjectiveDBaseMonth6, 2)
+write.csv(Goal3ObjectiveDBaseMonth6, "Goal3ObjectiveDBaseMonth6.csv", row.names = FALSE)
 
-pocketScreener3month = read.spss("C:/Users/Matthew.Hanauer/Desktop/Matt'sData/Reassess 3M SAMHSA Pocket Screen.sav", to.data.frame = TRUE)
-pocketScreener3month = rename(pocketScreener3month, c("ID" = "PARTID"))
-
-pocketScreener6month = read.spss("C:/Users/Matthew.Hanauer/Desktop/Matt'sData/Reassess 6M SAMHSA Pocket Screen.sav", to.data.frame = TRUE)
-pocketScreener6month = rename(pocketScreener6month, c("ID" = "PARTID"))
-
-pocketScreenerAll = merge(pocketScreenerBase, pocketScreener3month, by = "PARTID", all = TRUE)
-pocketScreenerAll = merge(pocketScreenerAll, pocketScreener3month, by = "PARTID", all = TRUE)
-head(pocketScreenerAll)
-
-### Now start combining all of the data Merge the following data sets: auditAll, gpraAdultAll, grpaYouthAll, dastAll, hepCBase, condomScaleAll, pocketScreenerAll 
-CCPEAlldat = merge(auditAll, gpraAdultAll, by = "PARTID", all = TRUE)  
-CCPEAlldat = merge(CCPEAlldat, grpaYouthAll, by = "PARTID", all = TRUE)  
-CCPEAlldat = merge(CCPEAlldat, dastAll, by = "PARTID", all = TRUE)  
-CCPEAlldat = merge(CCPEAlldat, hepCBase, by = "PARTID", all = TRUE)  
-CCPEAlldat = merge(CCPEAlldat, condomScaleAll, by = "PARTID", all = TRUE)
-CCPEAlldat = merge(CCPEAlldat, pocketScreenerAll, by = "PARTID", all = TRUE)  
-head(CCPEAlldat)
-write.csv(CCPEAlldat, "CCPEAlldat.csv", row.names = FALSE)
+#### Goal 3 Objective E ####### ####### ####### ####### ####### ####### ####### ####### ####### ####### ####### ####### 
+# Need to sum the following variables: TANF, IWAP, Medicaid, LegalAid, SSI, TTA, FoodBanks, HUD, Area10, RecoveryWorks, SNAP, WIC
+Goal3ObjectiveEBaseMonth6 = data.frame(benefitsAll$TANF, benefitsAll$IWAP, benefitsAll$Medicaid, benefitsAll$LegalAid, 
+benefitsAll$SSI, benefitsAll$TTA, benefitsAll$FoodBanks, benefitsAll$HUD, benefitsAll$Area10, benefitsAll$RecoveryWorks, 
+benefitsAll$SNAP, benefitsAll$WIC, benefitsAll$RATANF, benefitsAll$RAIWAP, benefitsAll$RAMedicaid, benefitsAll$RALegalAid, 
+benefitsAll$RASSI, benefitsAll$RATTA, benefitsAll$RAFoodBanks, benefitsAll$RAHUD, benefitsAll$RAArea10, benefitsAll$RARecoveryWorks, 
+benefitsAll$RASNAP, benefitsAll$RAWIC)
+Goal3ObjectiveEBaseMonth6 = data.frame(na.omit(Goal3ObjectiveEBaseMonth6))
+dim(Goal3ObjectiveEBaseMonth6)
+# Only one person so need more data
