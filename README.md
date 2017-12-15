@@ -16,20 +16,19 @@ auditAll = merge(auditAll, audit6Month, by = "PARTID", all = TRUE)
 head(auditAll)
 
 # Now GPRA Adult.  Need to rename the PARTID to ID.  Make sure you aggregate baseline with 3 month then with 6 month
-setwd("C:/Users/Matthew.Hanauer/Desktop/Matt'sData")
-gpraAdultBase = read.csv("CCPE GRPA - Baseline_3.csv", header = TRUE)
-gpraAdult3month = read.csv("Reassess 3M CCPE GPRA Adult.csv", header = TRUE)
-gpraAdult6month = read.csv("Reassess 6M CCPE GPRA Adult.csv", header = TRUE) 
+gpraAdultBase = read.spss("S:/Indiana Research & Evaluation/CCPE/CCPE SPSS - Datasets/Baseline Adult/CCPE GRPA - Baseline.sav", use.value.labels = FALSE, to.data.frame = TRUE)
+gpraAdult3month = read.spss("S:/Indiana Research & Evaluation/CCPE/CCPE SPSS - Datasets/3 Month Reassessments ADULT/Reassess 3M CCPE GPRA Adult.sav", use.value.labels = FALSE, to.data.frame = TRUE)
+gpraAdult6month = read.spss("S:/Indiana Research & Evaluation/CCPE/CCPE SPSS - Datasets/6 Month Reassessments ADULT/Reassess 6M CCPE GPRA Adult.sav", use.value.labels = FALSE, to.data.frame = TRUE)
 gpraAdultAll = merge(gpraAdultBase, gpraAdult3month, by = "PARTID", all = TRUE)
 gpraAdultAll = merge(gpraAdultAll, gpraAdult6month, by = "PARTID", all = TRUE)
-write.csv(gpraAdultAll, "gpraAdultAll.csv", row.names = FALSE)
 # This is a test to prove that it is merging correctly.  1002 has both baseline and six month and their HIV answers are the same.
 test = data.frame(subset(gpraAdultAll, PARTID == 1002))
 write.csv(test, "test.csv", row.names = FALSE)
 # Now GPRA Youth ########## ########## ########## ########## ########## ########## ##########
-gpraYouthBase = read.spss("C:/Users/Matthew.Hanauer/Desktop/Matt'sData/Baseline CCPE GPRA Youth.sav", to.data.frame = TRUE)
-gpraYouth3month = read.spss("C:/Users/Matthew.Hanauer/Desktop/Matt'sData/Reassess 3M CCPE GPRA Youth.sav", to.data.frame = TRUE)
-gpraYouth6month = read.spss("C:/Users/Matthew.Hanauer/Desktop/Matt'sData/Reassess 6M CCPE GPRA Youth.sav", to.data.frame = TRUE)
+gpraYouthBase = read.spss("S:/Indiana Research & Evaluation/CCPE/CCPE SPSS - Datasets/YOUTH Datasets/Baseline CCPE GPRA Youth.sav", use.value.labels = FALSE, to.data.frame = TRUE)
+gpraYouth3month = read.spss("S:/Indiana Research & Evaluation/CCPE/CCPE SPSS - Datasets/YOUTH Datasets/Reassess 3M CCPE GPRA Youth.sav", use.value.labels = FALSE, to.data.frame = TRUE)
+gpraYouth6month = read.spss("S:/Indiana Research & Evaluation/CCPE/CCPE SPSS - Datasets/YOUTH Datasets/Reassess 6M CCPE GPRA Youth.sav", use.value.labels = FALSE, to.data.frame = TRUE)
+
 gpraYouthAll = merge(gpraYouthBase, gpraYouth3month, by = "PARTID", all = TRUE)
 gpraYouthAll = merge(gpraYouthAll, gpraYouth3month, by = "PARTID", all = TRUE)
 gpraYouthAll = data.frame(gpraYouthAll)
@@ -83,15 +82,7 @@ pocketScreenerAll = merge(pocketScreenerBase, pocketScreener3month, by = "PARTID
 pocketScreenerAll = merge(pocketScreenerAll, pocketScreener3month, by = "PARTID", all = TRUE)
 head(pocketScreenerAll)
 
-### Now start combining all of the data Merge the following data sets: auditAll, gpraAdultAll, gpraYouthAll, dastAll, hepCBase, condomScaleAll, pocketScreenerAll 
-CCPEAlldat = merge(auditAll, gpraAdultAll, by = "PARTID", all = TRUE)  
-CCPEAlldat = merge(CCPEAlldat, gpraYouthAll, by = "PARTID", all = TRUE)  
-CCPEAlldat = merge(CCPEAlldat, dastAll, by = "PARTID", all = TRUE)  
-CCPEAlldat = merge(CCPEAlldat, hepCBase, by = "PARTID", all = TRUE)  
-CCPEAlldat = merge(CCPEAlldat, condomScaleAll, by = "PARTID", all = TRUE)
-CCPEAlldat = merge(CCPEAlldat, pocketScreenerAll, by = "PARTID", all = TRUE)  
-head(CCPEAlldat)
-write.csv(CCPEAlldat, "CCPEAlldat.csv", row.names = FALSE)
+
 
 #Connections #####  ##### ##### ##### ##### ##### ##### ##### ##### ##### ##### ##### #####
 # Need the following data sets: Benefits Tracking, CSQ8 6 month, GAD7, GPRA, HCVRQ, HSUQ, PHQ9, SASSI3
@@ -107,10 +98,9 @@ CSQ86month = read.spss("C:/Users/Matthew.Hanauer/Desktop/Matt'sDataConnections/C
 
 ### GAD7 #####  ##### ##### ##### ##### ##### ##### ##### ##### ##### ##### ##### #####
 # Remember that this data is 6 and 12 month assessments not 3 and 6 month
-setwd("C:/Users/Matthew.Hanauer/Desktop/Matt'sDataConnections/GAD7")
-GAD7Base = read.spss("C:/Users/Matthew.Hanauer/Desktop/Matt'sDataConnections/GAD7/GAD7 Baseline.sav", to.data.frame = TRUE)
-GAD76month = read.spss("C:/Users/Matthew.Hanauer/Desktop/Matt'sDataConnections/GAD7/GAD7 6 Month.sav", to.data.frame = TRUE)
-GAD712month = read.spss("C:/Users/Matthew.Hanauer/Desktop/Matt'sDataConnections/GAD7/GAD7 12 Month.sav", to.data.frame = TRUE)
+GAD7Base = read.spss("S:/Indiana Research & Evaluation/Indiana Connections/Data/GAD7/GAD7 Baseline.sav", to.data.frame = TRUE)
+GAD76month = read.spss("S:/Indiana Research & Evaluation/Indiana Connections/Data/GAD7/GAD7 6 Month.sav", to.data.frame = TRUE)
+GAD712month = read.spss("S:/Indiana Research & Evaluation/Indiana Connections/Data/GAD7/GAD7 12 Month.sav", to.data.frame = TRUE)
 
 GAD7All = merge(GAD7Base, GAD76month, by = "ParticipantID", all = TRUE)
 GAD7All = merge(GAD7All, GAD712month, by = "ParticipantID", all = TRUE)
@@ -130,10 +120,10 @@ HSUQ6month = read.spss("C:/Users/Matthew.Hanauer/Desktop/Matt'sDataConnections/H
 HSUQAll = merge(HSUQBase, HSUQ6month, by = "ParticipantID", all = TRUE)
 
 ### PHQ9 #####  ##### ##### ##### ##### ##### ##### ##### ##### ##### ##### ##### #####
-setwd("C:/Users/Matthew.Hanauer/Desktop/Matt'sDataConnections/PHQ9  ")
-PHQ9Base = read.spss("C:/Users/Matthew.Hanauer/Desktop/Matt'sDataConnections/PHQ9/PHQ9 Baseline.sav", to.data.frame = TRUE)
-PHQ96month = read.spss("C:/Users/Matthew.Hanauer/Desktop/Matt'sDataConnections/PHQ9/PHQ9 6 Month.sav", to.data.frame = TRUE)
-PHQ912month = read.spss("C:/Users/Matthew.Hanauer/Desktop/Matt'sDataConnections/PHQ9/PHQ9 12 Month.sav", to.data.frame = TRUE)
+setwd("C:/Users/Matthew.Hanauer/Desktop/Matt'sDataConnections/PHQ9")
+PHQ9Base = read.spss("S:/Indiana Research & Evaluation/Indiana Connections/Data/PHQ9/PHQ9 Baseline.sav", to.data.frame = TRUE)
+PHQ96month = read.spss("S:/Indiana Research & Evaluation/Indiana Connections/Data/PHQ9/PHQ9 6 Month.sav", to.data.frame = TRUE)
+PHQ912month = read.spss("S:/Indiana Research & Evaluation/Indiana Connections/Data/PHQ9/PHQ9 12 Month.sav", to.data.frame = TRUE)
 PHQ9All = merge(PHQ9Base, PHQ96month, by = "ParticipantID", all = TRUE)
 PHQ9All = merge(PHQ9All, PHQ912month, by = "ParticipantID", all = TRUE)
 
@@ -144,8 +134,7 @@ SASSI36month = read.spss("C:/Users/Matthew.Hanauer/Desktop/Matt'sDataConnections
 SASSI3All = merge(SASSI3Base, SASSI36month, by = "ParticipantID", all = TRUE)
  
 #### GRPA ######## ########################################################################
-setwd("C:/Users/Matthew.Hanauer/Desktop/Matt'sDataConnections/GPRA") 
-GPRAConBase =read.spss("C:/Users/Matthew.Hanauer/Desktop/Matt'sDataConnections/GPRA/GPRA Baseline.sav", use.value.labels = FALSE, to.data.frame = TRUE) 
-GPRAConMonth6 =read.spss("C:/Users/Matthew.Hanauer/Desktop/Matt'sDataConnections/GPRA/GPRA 6 Months.sav", use.value.labels = FALSE, to.data.frame = TRUE) 
+GPRAConBase =read.spss("S:/Indiana Research & Evaluation/Indiana Connections/Data/GPRA/GPRA Baseline.sav", use.value.labels = FALSE, to.data.frame = TRUE) 
+GPRAConMonth6 =read.spss("S:/Indiana Research & Evaluation/Indiana Connections/Data/GPRA/GPRA 6 Months.sav", use.value.labels = FALSE, to.data.frame = TRUE) 
 GPRAAll = merge(GPRAConBase, GPRAConMonth6, by = "ParticipantID", all = TRUE)
 
