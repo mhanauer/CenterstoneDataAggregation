@@ -134,7 +134,13 @@ SASSI36month = read.spss("C:/Users/Matthew.Hanauer/Desktop/Matt'sDataConnections
 SASSI3All = merge(SASSI3Base, SASSI36month, by = "ParticipantID", all = TRUE)
  
 #### GRPA ######## ########################################################################
-GPRAConBase =read.spss("S:/Indiana Research & Evaluation/Indiana Connections/Data/GPRA/GPRA Baseline.sav", use.value.labels = FALSE, to.data.frame = TRUE) 
-GPRAConMonth6 =read.spss("S:/Indiana Research & Evaluation/Indiana Connections/Data/GPRA/GPRA 6 Months.sav", use.value.labels = FALSE, to.data.frame = TRUE) 
+#GPRAConBase =read.spss("S:/Indiana Research & Evaluation/Indiana Connections/Data/GPRA/GPRA Baseline.sav", use.value.labels = FALSE, to.data.frame = TRUE) 
+#GPRAConMonth6 =read.spss("S:/Indiana Research & Evaluation/Indiana Connections/Data/GPRA/GPRA 6 Months.sav", use.value.labels = FALSE, to.data.frame = TRUE) 
+#GPRAAll = merge(GPRAConBase, GPRAConMonth6, by = "ParticipantID", all = TRUE)
+setwd("S:/Indiana Research & Evaluation/Indiana Connections/Data/GPRA")
+GPRAConBase = read.csv("GPRA Baseline.csv", header = TRUE) 
+GPRAConMonth6 = read.csv("GPRA 6 Months.csv", header = TRUE)
+colnames(GPRAConBase)[1]= "ParticipantID"  
+colnames(GPRAConMonth6)[1]= "ParticipantID"  
 GPRAAll = merge(GPRAConBase, GPRAConMonth6, by = "ParticipantID", all = TRUE)
 
