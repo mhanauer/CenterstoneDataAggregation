@@ -70,6 +70,7 @@ head(condomScaleAll)
 
 # Now Pocket Screener ########## ########## ########## ########## ########## ########## ##########
 pocketScreenerBase = read.spss("S:/Indiana Research & Evaluation/CCPE/CCPE SPSS - Datasets/Baseline Adult/SAMHSA Pocket Screen - Baseline.sav", to.data.frame = TRUE)
+library(plyr)
 pocketScreenerBase = rename(pocketScreenerBase, c("ID" = "PARTID"))
 
 pocketScreener3month = read.spss("S:/Indiana Research & Evaluation/CCPE/CCPE SPSS - Datasets/3 Month Reassessments ADULT/Reassess 3M SAMHSA Pocket Screen.sav", to.data.frame = TRUE)
