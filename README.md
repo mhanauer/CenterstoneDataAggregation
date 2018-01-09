@@ -53,6 +53,7 @@ INSTRMNT_LANG = n
 LANG_OTHER = n
 GRANT_ID = n
 DESIGNGRP = n
+MONTH = n
 DAY = n
 YEAR = YEAR
 INTTYPE =n
@@ -62,6 +63,8 @@ INTERVENTION_B = n
 INTERVENTION_C = n
 gpraAdult3monthRedCapFirst = cbind(INSTRMNT_LANG, LANG_OTHER, GRANT_ID, DESIGNGRP, PARTID = gpraAdult3monthRedCapAll$REDCAP_SURVEY_IDENTIFIER, MONTH, DAY, YEAR, INTTYPE, INTDUR, INTERVENTION_A, INTERVENTION_B, INTERVENTION_C)
 gpraAdult3monthRedCapAll$REDCAP_SURVEY_IDENTIFIER = NULL
+dim(gpraAdult3monthRedCapFirst)
+dim(gpraAdult3monthRedCapAll)
 gpraAdult3monthRedCapAll = cbind(gpraAdult3monthRedCapFirst, gpraAdult3monthRedCapAll)
 summary(gpraAdult3monthRedCapAll)
 
@@ -91,8 +94,8 @@ gpraAdult3monthRedCapAll$Wrong9 = NULL
 
 
 
-gpraAdult3monthTest = rbind(gpraAdult3month,gpraAdult3monthRedCapAll)
-head(gpraAdult3monthTest)
+gpraAdult3month = rbind(gpraAdult3month,gpraAdult3monthRedCapAll)
+head(gpraAdult3month)
 gpraAdult6month = read.spss("S:/Indiana Research & Evaluation/CCPE/CCPE SPSS - Datasets/6 Month Reassessments ADULT/Reassess 6M CCPE GPRA Adult.sav", use.value.labels = FALSE, to.data.frame = TRUE)
 gpraAdultAll = merge(gpraAdultBase, gpraAdult3month, by = "PARTID", all = TRUE)
 gpraAdultAll = merge(gpraAdultAll, gpraAdult6month, by = "PARTID", all = TRUE)
