@@ -169,7 +169,7 @@ dim(gpraYouth3monthRedCap)
 
 ### Now get the RedCap data for youth
 setwd("S:/Indiana Research & Evaluation/CCPE/CCPE SPSS - Datasets/YOUTH Datasets")
-gpraYouth3monthRedCap = read.csv("CCPEFollowUpYouthQue_DATA_2018-01-28_0911.csv", header = TRUE)
+gpraYouth3monthRedCap = read.csv("CCPEFollowUpYouthQue_DATA.csv", header = TRUE)
 #head(gpraYouth3monthRedCap)
 #head(gpraYouth3month)
 #write.csv(gpraYouth3month, "gpraYouth3month.csv", row.names = FALSE)
