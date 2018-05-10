@@ -130,7 +130,7 @@ gpraAdultAllRedCapFull$RESPECT_NONE___0 = NULL
 
 # Rename the one's
 
-gpraAdultAllRedCapFull = rename(gpraAdultAllRedCapFull, c("DEPLOYEDIRAQ___1" = "DEPLOYEDIRAQ", "DEPLOYEDPERS___1" = "DEPLOYEDPERS", "DEPLOYEDASIA___1" = "DEPLOYEDASIA", "DEPLOYEDKOR___1" = "DEPLOYEDKOR", "DEPLOYEDWWII___1" = "DEPLOYEDWWII", "DEPLOYEDOTH___1" = "DEPLOYEDOTH", "RESPECT_RACE___1" = "RESPECT_RACE", "RESPECT_REL___1" = "RESPECT_REL", "RESPECT_GENDER___1" = "RESPECT_GENDER", "RESPECT_AGE___1" = "RESPECT_AGE", "RESPECT_SEXPR___1" = "RESPECT_SEXPR", "RESPECT_DISABLE___1" = "RESPECT_DISABLE", "RESPECT_MH___1" = "RESPECT_MH", "RESPECT_HIV___1"= "RESPECT_HIV", "RESPECT_NONE___1" = "RESPECT_NONE"))
+gpraAdultAllRedCapFull = rename(gpraAdultAllRedCapFull, replace(c("DEPLOYEDIRAQ___1" = "DEPLOYEDIRAQ", "DEPLOYEDPERS___1" = "DEPLOYEDPERS", "DEPLOYEDASIA___1" = "DEPLOYEDASIA", "DEPLOYEDKOR___1" = "DEPLOYEDKOR", "DEPLOYEDWWII___1" = "DEPLOYEDWWII", "DEPLOYEDOTH___1" = "DEPLOYEDOTH", "RESPECT_RACE___1" = "RESPECT_RACE", "RESPECT_REL___1" = "RESPECT_REL", "RESPECT_GENDER___1" = "RESPECT_GENDER", "RESPECT_AGE___1" = "RESPECT_AGE", "RESPECT_SEXPR___1" = "RESPECT_SEXPR", "RESPECT_DISABLE___1" = "RESPECT_DISABLE", "RESPECT_MH___1" = "RESPECT_MH", "RESPECT_HIV___1"= "RESPECT_HIV", "RESPECT_NONE___1" = "RESPECT_NONE")))
 
 
 # Get rid of RECORD_ID, NATIONAL_MINORITY_SAHIV_PREVENTION_INITIATIVE_YOUT_TIMESTAMP, NAME, NATIONAL_MINORITY_SAHIV_PREVENTION_INITIATIVE_YOUT_COMPLETE
@@ -156,9 +156,12 @@ head(gpraAdult3month)
 gpraAdult6month = read.spss("S:/Indiana Research & Evaluation/CCPE/CCPE SPSS - Datasets/6 Month Reassessments ADULT/Reassess 6M CCPE GPRA Adult.sav", use.value.labels = FALSE, to.data.frame = TRUE)
 gpraAdultAll = merge(gpraAdultBase, gpraAdult3month, by = "PARTID", all = TRUE)
 gpraAdultAll = merge(gpraAdultAll, gpraAdult6month, by = "PARTID", all = TRUE)
+write.csv(gpraAdultAll, "gpraAdultAll.csv", row.names = FALSE)
 # This is a test to prove that it is merging correctly.  1002 has both baseline and six month and their HIV answers are the same.
 test = data.frame(subset(gpraAdultAll, PARTID == 1002))
 write.csv(test, "test.csv", row.names = FALSE)
+
+
 # Now GPRA Youth ########## ########## ########## ########## ########## ########## ##########
 gpraYouthBase = read.spss("S:/Indiana Research & Evaluation/CCPE/CCPE SPSS - Datasets/YOUTH Datasets/Baseline CCPE GPRA Youth.sav", use.value.labels = FALSE, to.data.frame = TRUE)
 gpraYouth3month = read.spss("S:/Indiana Research & Evaluation/CCPE/CCPE SPSS - Datasets/YOUTH Datasets/Reassess 3M CCPE GPRA Youth_1.sav", use.value.labels = FALSE, to.data.frame = TRUE)
@@ -281,7 +284,6 @@ HSUQ6month = read.spss("C:/Users/Matthew.Hanauer/Desktop/Matt'sDataConnections/H
 HSUQAll = merge(HSUQBase, HSUQ6month, by = "ParticipantID", all = TRUE)
 
 ### PHQ9 #####  ##### ##### ##### ##### ##### ##### ##### ##### ##### ##### ##### #####
-setwd("C:/Users/Matthew.Hanauer/Desktop/Matt'sDataConnections/PHQ9")
 PHQ9Base = read.spss("S:/Indiana Research & Evaluation/Indiana Connections/Data/PHQ9/PHQ9 Baseline.sav", to.data.frame = TRUE)
 PHQ96month = read.spss("S:/Indiana Research & Evaluation/Indiana Connections/Data/PHQ9/PHQ9 6 Month.sav", to.data.frame = TRUE)
 PHQ912month = read.spss("S:/Indiana Research & Evaluation/Indiana Connections/Data/PHQ9/PHQ9 12 Month.sav", to.data.frame = TRUE)
