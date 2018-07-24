@@ -166,14 +166,22 @@ write.csv(test, "test.csv", row.names = FALSE)
 
 # Now GPRA Youth ########## ########## ########## ########## ########## ########## ##########
 gpraYouthBase = read.spss("S:/Indiana Research & Evaluation/CCPE/CCPE SPSS - Datasets/YOUTH Datasets/Baseline CCPE GPRA Youth.sav", use.value.labels = FALSE, to.data.frame = TRUE)
+
+### Now get GRPA youth base reassessment
+grpaYouthBaseRedCap
+
+# Now finish loading 
 gpraYouth3month = read.spss("S:/Indiana Research & Evaluation/CCPE/CCPE SPSS - Datasets/YOUTH Datasets/Reassess 3M CCPE GPRA Youth_1.sav", use.value.labels = FALSE, to.data.frame = TRUE)
+
+
+
 gpraYouth6month = read.spss("S:/Indiana Research & Evaluation/CCPE/CCPE SPSS - Datasets/YOUTH Datasets/Reassess 6M CCPE GPRA Youth.sav", use.value.labels = FALSE, to.data.frame = TRUE)
 gpraYouth3month$WhyLessRespect = NULL
 head(gpraYouth3month)
 dim(gpraYouth3month)
 dim(gpraYouth3monthRedCap)
 
-### Now get the RedCap data for youth
+### Now get the RedCap reassessment data for youth
 setwd("S:/Indiana Research & Evaluation/CCPE/CCPE SPSS - Datasets/YOUTH Datasets")
 gpraYouth3monthRedCap = read.csv("CCPEFollowUpYouthQue_DATA.csv", header = TRUE)
 #head(gpraYouth3monthRedCap)
@@ -238,16 +246,18 @@ head(condomScaleAll)
 
 # Now Pocket Screener ########## ########## ########## ########## ########## ########## ##########
 pocketScreenerBase = read.spss("S:/Indiana Research & Evaluation/CCPE/CCPE SPSS - Datasets/Baseline Adult/SAMHSA Pocket Screen - Baseline.sav", to.data.frame = TRUE)
-library(plyr)
-pocketScreenerBase = rename(pocketScreenerBase, c("ID" = "PARTID"))
+head(pocketScreenerBase)
+#library(plyr)
+#pocketScreenerBase = rename(pocketScreenerBase, c("ID" = "PARTID"))
 
 pocketScreener3month = read.spss("S:/Indiana Research & Evaluation/CCPE/CCPE SPSS - Datasets/3 Month Reassessments ADULT/Reassess 3M SAMHSA Pocket Screen.sav", to.data.frame = TRUE)
-pocketScreener3month = rename(pocketScreener3month, c("ID" = "PARTID"))
+#pocketScreener3month = rename(pocketScreener3month, c("ID" = "PARTID"))
 
+#head(pocketScreener3month)
 
-pocketScreenerAll = merge(pocketScreenerBase, pocketScreener3month, by = "PARTID", all = TRUE)
+pocketScreenerAll = merge(pocketScreenerBase, pocketScreener3month, by = "ID", all = TRUE)
 head(pocketScreenerAll)
-
+dim(pocketScreenerAll)
 
 
 #Connections #####  ##### ##### ##### ##### ##### ##### ##### ##### ##### ##### ##### #####
@@ -306,8 +316,15 @@ setwd("S:/Indiana Research & Evaluation/Indiana Connections/Data/GPRA")
 GPRAAll = read.csv("ConnGPRA.csv", header = TRUE) 
 # subet the data based on 1's for baseline and 2's for six-month.  Then write as CSV's, then merge together.
 GPRAConBase = subset(GPRAAll, InterviewType ==1)
-GPRAConMonth6 = subset(GPRAAll, InterviewType = 2)
-GPRAAll = merge(GPRAConBase, GPRAConMonth6, by = "ClientID", all = TRUE)
+GPRAConBase$ClientID
+write.csv(GPRAConBase, "GPRAConBase.csv", row.names = FALSE)
+GPRAConMonth6 = subset(GPRAAll, InterviewType == 2)
+GPRAConMonth6$InterviewType
+write.csv(GPRAConMonth6, "GPRAConMonth6.csv", row.names = FALSE)
+GPRAConMonth6$ClientID
+GPRAAll = merge(GPRAConBase, GPRAConMonth6, by = "ClientID", all.y = TRUE)
+
+write.csv(GPRAAll, "GPRAAll.csv", row.names = FALSE)
 GPRAAll = data.frame(apply(GPRAAll, 2, function(x){ifelse(x == -7, 0, ifelse(x == -8, 0, ifelse(x == -9, 0 ,ifelse(x == -1, 0, x))))}))
 # Then need to go into the code and change the names to the correct ones
 # ParticipantID = GPRAAll$ParticipantID, GPRAAll$InAlcohol.x, GPRAAll$InAlcohol.y, GPRAAll$OutAlcohol.x, GPRAAll$OutAlcohol.y, GPRAAll$ERAlcohol.x, GPRAAll$ERAlcohol.y
