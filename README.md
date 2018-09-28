@@ -1,7 +1,6 @@
-
 library(foreign)
 library(h2o)
-library(h2o)
+library(plyr)
 # Get R markdown working later
 # Get audit in first and combine the rest after.  Can be fine, because you will do a full join.
 auditBase = read.spss("C:/Users/Matthew.Hanauer/Desktop/Matt'sData/AUDIT - Baseline.sav", to.data.frame = TRUE)
@@ -18,12 +17,21 @@ auditAll = merge(auditAll, audit6Month, by = "PARTID", all = TRUE)
 head(auditAll)
 
 # Now GPRA Adult.  Need to rename the PARTID to ID.  Make sure you aggregate baseline with 3 month then with 6 month
-gpraAdultBase = read.spss("S:/Indiana Research & Evaluation/CCPE/CCPE SPSS - Datasets/Baseline Adult/CCPE GRPA - Baseline.sav", use.value.labels = FALSE, to.data.frame = TRUE)
+#
+setwd("S:/Indiana Research & Evaluation/CCPE/CCPE SPSS - Datasets/Baseline ADULT")
+gpraAdultBase = read.csv("CCPE GRPA - Baseline.csv", header = TRUE) 
+head(gpraAdultBase)
+
+gpraAdultBase = rename(gpraAdultBase, c("ï..INSTRMNT_LANG" = "INSTRMNT_LANG"))
+
+
+gpraAdultBaselineRedCap = rename(gpraAdultBaselineRedCap, c("DEPLOYEDIRAQ___1" = "DEPLOYEDIRAQ", "DEPLOYEDPERS___1" = "DEPLOYEDPERS", "DEPLOYEDASIA___1" = "DEPLOYEDASIA", "DEPLOYEDKOR___1" = "DEPLOYEDKOR", "DEPLOYEDWWII___1" = "DEPLOYEDWWII", "DEPLOYEDOTH___1" = "DEPLOYEDOTH", "RESPECT_RACE___1" = "RESPECT_RACE", "RESPECT_REL___1" = "RESPECT_REL", "RESPECT_GENDER___1" = "RESPECT_GENDER", "RESPECT_AGE___1" = "RESPECT_AGE", "RESPECT_SEXPR___1" = "RESPECT_SEXPR", "RESPECT_DISABLE___1" = "RESPECT_DISABLE", "RESPECT_MH___1" = "RESPECT_MH", "RESPECT_HIV___1"= "RESPECT_HIV", "RESPECT_NONE___1" = "RESPECT_NONE"))
+
 
 setwd("C:/Users/Matthew.Hanauer/Desktop")
 write.csv(gpraAdultBase, "gpraAdultBase.csv", row.names = FALSE)
 
-##### Now get GPRA enrollment Redcap adult data
+######################## Now get GPRA enrollment Redcap adult data ####################################
 setwd("S:/Indiana Research & Evaluation/CCPE/CCPE SPSS - Datasets/Baseline ADULT")
 gpraAdultBaselineRedCap = read.csv("CCPEAdultBaselineRedCap.csv", header = TRUE)
 gpraAdultBaselineRedCap$record_id = NULL
@@ -55,12 +63,47 @@ gpraAdultBaselineRedCap$RESPECT_NONE___0 = NULL
 
 head(gpraAdultBaselineRedCap)
 
-
-library(plyr)
 gpraAdultBaselineRedCap = rename(gpraAdultBaselineRedCap, c("DEPLOYEDIRAQ___1" = "DEPLOYEDIRAQ", "DEPLOYEDPERS___1" = "DEPLOYEDPERS", "DEPLOYEDASIA___1" = "DEPLOYEDASIA", "DEPLOYEDKOR___1" = "DEPLOYEDKOR", "DEPLOYEDWWII___1" = "DEPLOYEDWWII", "DEPLOYEDOTH___1" = "DEPLOYEDOTH", "RESPECT_RACE___1" = "RESPECT_RACE", "RESPECT_REL___1" = "RESPECT_REL", "RESPECT_GENDER___1" = "RESPECT_GENDER", "RESPECT_AGE___1" = "RESPECT_AGE", "RESPECT_SEXPR___1" = "RESPECT_SEXPR", "RESPECT_DISABLE___1" = "RESPECT_DISABLE", "RESPECT_MH___1" = "RESPECT_MH", "RESPECT_HIV___1"= "RESPECT_HIV", "RESPECT_NONE___1" = "RESPECT_NONE"))
 
 
-write.csv(gpraAdultBaselineRedCapTest, "gpraAdultBaselineRedCap.csv", row.names = FALSE)
+
+# Ok now need to add these variables with NA's INSTRMNT_LANG
+# Ok for the first six people, we need to make intervention what ever CTR is and given them the same date. 9/26/18
+#LANG_OTHER
+#GRANT_ID
+#DESIGNGRP
+#MONTH
+#DAY
+#YEAR
+#INTTYPE
+#INTDUR
+#INTERVENTION_A
+#INTERVENTION_B
+#INTERVENTION_C
+#SIS = 2, CTR = 1
+INSTRMNT_LANG = rep(1, dim(gpraAdultBaselineRedCap)[1])
+LANG_OTHER = rep(NA, dim(gpraAdultBaselineRedCap)[1])
+GRANT_ID = rep(NA, dim(gpraAdultBaselineRedCap)[1])
+DESIGNGRP = rep(1, dim(gpraAdultBaselineRedCap)[1])
+INTTYPE = rep(1, dim(gpraAdultBaselineRedCap)[1])
+INTDUR = rep(3, dim(gpraAdultBaselineRedCap)[1])
+MONTH = rep(9, 6)
+DAY = rep(26, 6)
+YEAR = rep(2018, 6)
+PARTID = gpraAdultBaselineRedCap$PARTID
+# Need to erase this, because it will mess up the order below
+gpraAdultBaselineRedCap$PARTID = NULL
+
+INTERVENTION_A = rep(1, 6)
+INTERVENTION_B = rep(NA, dim(gpraAdultBaselineRedCap)[1])
+INTERVENTION_C = rep(NA, dim(gpraAdultBaselineRedCap)[1])
+
+# So now combine the variables above 
+gpraAdultBaselineRedCap = data.frame(INSTRMNT_LANG = INSTRMNT_LANG, LANG_OTHER = LANG_OTHER, GRANT_ID = GRANT_ID, DESIGNGRP = DESIGNGRP, PARTID = PARTID, MONTH =MONTH, DAY = DAY, YEAR = YEAR,  INTTYPE = INTTYPE, INTDUR = INTDUR, INTERVENTION_A = INTERVENTION_A, INTERVENTION_B = INTERVENTION_B, INTERVENTION_C = INTERVENTION_C,gpraAdultBaselineRedCap)
+
+write.csv(gpraAdultBaselineRedCap, "gpraAdultBaselineRedCap.csv", row.names = FALSE)
+# Now stack baseline data
+gpraAdultBase = rbind(gpraAdultBase, gpraAdultBaselineRedCap)
 
 
 #### Now get 3-month data
