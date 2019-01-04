@@ -86,21 +86,29 @@ GRANT_ID = rep(NA, dim(gpraAdultBaselineRedCap)[1])
 DESIGNGRP = rep(1, dim(gpraAdultBaselineRedCap)[1])
 INTTYPE = rep(1, dim(gpraAdultBaselineRedCap)[1])
 INTDUR = rep(3, dim(gpraAdultBaselineRedCap)[1])
-MONTH = rep(9, 7)
-DAY = rep(26, 7)
-YEAR = rep(2018, 7)
 PARTID = gpraAdultBaselineRedCap$PARTID
 # Need to erase this, because it will mess up the order below
 gpraAdultBaselineRedCap$PARTID = NULL
+MONTH = gpraAdultBaselineRedCap$MONTH
+DAY = gpraAdultBaselineRedCap$DAY
+YEAR  = gpraAdultBaselineRedCap$YEAR
 
-INTERVENTION_A = rep(1, 7)
+gpraAdultBaselineRedCap$MONTH = NULL
+gpraAdultBaselineRedCap$DAY = NULL
+gpraAdultBaselineRedCap$YEAR = NULL
+gpraAdultBaselineRedCap$EMAIL_ADDRESS = NULL
+gpraAdultBaselineRedCap$INTERVENTION_TYPE = NULL
+
+INTERVENTION_A = rep(1, dim(gpraAdultBaselineRedCap)[1])
 INTERVENTION_B = rep(NA, dim(gpraAdultBaselineRedCap)[1])
 INTERVENTION_C = rep(NA, dim(gpraAdultBaselineRedCap)[1])
 
 # So now combine the variables above 
 gpraAdultBaselineRedCap = data.frame(INSTRMNT_LANG = INSTRMNT_LANG, LANG_OTHER = LANG_OTHER, GRANT_ID = GRANT_ID, DESIGNGRP = DESIGNGRP, PARTID = PARTID, MONTH =MONTH, DAY = DAY, YEAR = YEAR,  INTTYPE = INTTYPE, INTDUR = INTDUR, INTERVENTION_A = INTERVENTION_A, INTERVENTION_B = INTERVENTION_B, INTERVENTION_C = INTERVENTION_C,gpraAdultBaselineRedCap)
-
-
+head(gpraAdultBaselineRedCap)
+head(gpraAdultBase)
+dim(gpraAdultBaselineRedCap)
+dim(gpraAdultBase)
 
 write.csv(gpraAdultBaselineRedCap, "gpraAdultBaselineRedCap.csv", row.names = FALSE)
 # Now stack baseline data
@@ -305,8 +313,6 @@ head(gpraYouthAll)
 
 
 
-
-
 # Now HepC ########## ########## ########## ########## ########## ########## ##########
 hepCBase = read.spss("C:/Users/Matthew.Hanauer/Desktop/Matt'sData/HepC Risk Questionnaire - Baseline.sav", to.data.frame = TRUE)
 hepCBase = rename(hepCBase, c("ID" = "PARTID"))
@@ -347,4 +353,4 @@ dim(pocketScreenerAll)
 
 
 
- 
+
