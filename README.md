@@ -26,18 +26,19 @@ gpraAdultBaselineRedCapFull = read.csv("CCPEAdultBaselineRedCapFull.csv", header
 dim(gpraAdultBaselineRedCap)
 dim(gpraAdultBaselineRedCapFull)
 
-gpraAdultBaselineRedCapFull = gpraAdultBaselineRedCapFull[c(1:152)]
+head(gpraAdultBaselineRedCapFull)
 
-
+gpraAdultBaselineRedCapFull = gpraAdultBaselineRedCapFull[c(1:153)]
 
 gpraAdultBaselineRedCap = rbind(gpraAdultBaselineRedCap, gpraAdultBaselineRedCapFull)
 
-
+gpraAdultBaselineRedCapFull$sexinf = NULL
 gpraAdultBaselineRedCap$record_id = NULL
 gpraAdultBaselineRedCap$redcap_survey_identifier = NULL
 gpraAdultBaselineRedCap$national_minority_sahiv_prevention_initiative_adul_timestamp = NULL
 gpraAdultBaselineRedCap$name = NULL
 gpraAdultBaselineRedCap$national_minority_sahiv_prevention_initiative_adul_complete = NULL
+
 
 gpraAdultBaselineRedCap = data.frame(gpraAdultBaselineRedCap)
 
@@ -113,6 +114,7 @@ INTERVENTION_C = rep(NA, dim(gpraAdultBaselineRedCap)[1])
 # So now combine the variables above 
 gpraAdultBaselineRedCap = data.frame(INSTRMNT_LANG = INSTRMNT_LANG, LANG_OTHER = LANG_OTHER, GRANT_ID = GRANT_ID, DESIGNGRP = DESIGNGRP, PARTID = PARTID, MONTH =MONTH, DAY = DAY, YEAR = YEAR,  INTTYPE = INTTYPE, INTDUR = INTDUR, INTERVENTION_A = INTERVENTION_A, INTERVENTION_B = INTERVENTION_B, INTERVENTION_C = INTERVENTION_C,gpraAdultBaselineRedCap)
 head(gpraAdultBaselineRedCap)
+gpraAdultBaselineRedCap$SEXINF = NULL
 head(gpraAdultBase)
 dim(gpraAdultBaselineRedCap)
 dim(gpraAdultBase)
@@ -202,9 +204,11 @@ gpraAdult3monthRedCapAll$RESPECT_MH___0 = NULL
 gpraAdult3monthRedCapAll$RESPECT_HIV___0 = NULL
 gpraAdult3monthRedCapAll$RESPECT_NONE___0 = NULL
 
+
+head(gpraAdult3monthRedCapAll[,49:54])
 colnames(gpraAdult3monthRedCapAll)[49:54] = c("DEPLOYEDIRAQ", "DEPLOYEDPERS", "DEPLOYEDASIA", "DEPLOYEDKOR", "DEPLOYEDWWII", "DEPLOYEDOTH")
 
-
+head(gpraAdult3monthRedCapAll[,92:100])
 colnames(gpraAdult3monthRedCapAll)[92:100] = c("RESPECT_RACE", "RESPECT_REL", "RESPECT_GENDER", "RESPECT_AGE", "RESPECT_SEXPR", "RESPECT_DISABLE", "RESPECT_MH", "RESPECT_HIV", "RESPECT_NONE")
 
 
